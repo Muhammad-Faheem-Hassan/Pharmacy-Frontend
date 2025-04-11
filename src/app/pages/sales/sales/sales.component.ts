@@ -19,6 +19,7 @@ export class SalesComponent implements OnInit {
       customerName: ['', Validators.required],
       date: [new Date().toISOString().substring(0, 10), Validators.required],
       items: this.fb.array([]),
+      totalAmount: [0],
     });
     this.addItem(); 
   };

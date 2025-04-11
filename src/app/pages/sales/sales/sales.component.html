@@ -30,12 +30,18 @@
           <label class="form-label">Price</label>
           <input type="number" class="form-control" formControlName="price" (input)="updateTotal()">
         </div>
-        <div class="col-md-2">
-          <button type="button" class="btn btn-danger" (click)="removeItem(i)">Remove</button>
+        <div class="col-md-2 text-end">
+          <div class="d-flex flex-row">
+            <button type="button" class="btn btn-danger" (click)="removeItem(i)">
+              Remove
+            </button>
+            <button *ngIf="i === items.controls.length - 1" type="button" class="btn btn-secondary ms-1" (click)="addItem()">
+              <i class="bi bi-plus-lg me-1"></i> Add
+            </button>
+          </div>
         </div>
       </div>
 
-      <button type="button" class="btn btn-secondary" (click)="addItem()">Add Item</button>
     </div>
 
     <div class="mt-3">

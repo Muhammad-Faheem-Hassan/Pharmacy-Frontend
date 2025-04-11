@@ -1,0 +1,40 @@
+<div class="container">
+  <h3 class="mb-3">Add New Medicine</h3>
+
+  <form [formGroup]="medicineForm" (ngSubmit)="submitMedicine()">
+    <div class="row g-3">
+      <div class="col-md-6">
+        <label class="form-label">Medicine Name</label>
+        <input type="text" formControlName="name" class="form-control" />
+      </div>
+
+      <div class="col-md-6">
+        <label class="form-label">Batch Number</label>
+        <input type="text" formControlName="batchNumber" class="form-control" />
+      </div>
+
+      <div class="col-md-6">
+        <label class="form-label">Expiry Date</label>
+        <input type="date" formControlName="expiryDate" class="form-control" />
+      </div>
+
+      <div class="col-md-6">
+        <label class="form-label">Quantity</label>
+        <input type="number" formControlName="quantity" class="form-control" />
+      </div>
+
+      <div class="col-md-6">
+        <label class="form-label">Price</label>
+        <input type="number" formControlName="price" class="form-control" />
+      </div>
+    </div>
+
+    <div class="row mt-4">
+      <div class="col-12">
+        <button type="submit" class="btn btn-primary" [disabled]="medicineForm.invalid">
+          Add Medicine
+        </button>
+      </div>
+    </div>
+  </form>
+</div>

@@ -1,0 +1,5 @@
+export enum EMediaAssetUIStages {
+    BRAND_SELECTION = 'BRAND_SELECTION',
+    ASSET_DATA = 'ASSET_DATA',
+    MEDIA_LINK = 'MEDIA_LINK'
+}

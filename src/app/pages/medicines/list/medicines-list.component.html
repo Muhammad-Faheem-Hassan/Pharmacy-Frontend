@@ -1,0 +1,40 @@
+<div class="container">
+  <div class="d-flex justify-content-between align-items-center mb-3">
+    <h3 class="mb-0">Medicine List</h3>
+    <a routerLink="/medicines/form" class="btn btn-primary">
+      <i class="bi bi-plus-circle me-1"></i> Add Medicine
+    </a>
+  </div>
+
+  <div *ngIf="isLoading" class="text-center my-4">
+    <div class="spinner-border text-primary" role="status"></div>
+    <p class="mt-2">Loading medicines...</p>
+  </div>
+
+  <table *ngIf="!isLoading && medicines.length" class="table table-bordered table-hover">
+    <thead class="table-light">
+      <tr>
+        <th>#</th>
+        <th>Medicine Name</th>
+        <th>Batch</th>
+        <th>Stock</th>
+        <th>Purchase Price</th>
+        <th>Sale Price</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let medicine of medicines; let i = index">
+        <td>{{ i + 1 }}</td>
+        <td>{{ medicine.name }}</td>
+        <td>{{ medicine.batchNumber }}</td>
+        <td>{{ medicine.quantity }}</td>
+        <td>Rs {{ medicine.purchasePrice }}</td>
+        <td>Rs {{ medicine.salePrice }}</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <div *ngIf="!isLoading && !medicines.length" class="alert alert-info">
+    No medicines available.
+  </div>
+</div>
