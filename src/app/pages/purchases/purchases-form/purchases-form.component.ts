@@ -2,25 +2,56 @@ import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, FormArray, Validators } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule } from '@angular/forms';
+import { SupplierService } from '../../../core/services/supplier.service';
+import { PurchaseService } from '../../../core/services/puchase.service';
+import { MedicineService } from '../../../core/services/medicine.service';
+import { Router } from '@angular/router';
 
 @Component({
-  selector: 'app-purchase',
+  selector: 'app-purchase-form',
   standalone: true,
   imports: [CommonModule, ReactiveFormsModule],
-  templateUrl: './purchases.component.html',
+  templateUrl: './purchases-form.component.html',
 })
-export class PurchaseComponent implements OnInit {
+export class PurchaseFormComponent implements OnInit {
   purchaseForm!: FormGroup;
+  suppliers: any[] = [];
+  medicines: any[] = [];
 
-  constructor(private fb: FormBuilder) {}
+  constructor(private fb: FormBuilder, private supplierService: SupplierService,
+    private purchaseService: PurchaseService,
+    private medicineService: MedicineService,
+    private router: Router) { }
+
 
   ngOnInit(): void {
     this.purchaseForm = this.fb.group({
-      supplierName: ['', Validators.required],
+      supplierId: ['', Validators.required],
       date: [new Date().toISOString().substring(0, 10), Validators.required],
       items: this.fb.array([this.createItemGroup()]),
       totalAmount: [0],
     });
+    this.fetchSuppliers();
+    this.fetchMedicine();
+  }
+
+  async fetchSuppliers(): Promise<void> {
+    try {
+      this.suppliers = await this.supplierService.getItems();
+    } catch (error) {
+      console.error('Error fetching suppliers:', error);
+    } finally {
+
+    }
+  }
+  async fetchMedicine(): Promise<void> {
+    try {
+      this.medicines = await this.medicineService.getItems();
+    } catch (error) {
+      console.error('Error fetching medicines:', error);
+    } finally {
+
+    }
   }
 
   get items(): FormArray {
@@ -56,12 +87,13 @@ export class PurchaseComponent implements OnInit {
     this.purchaseForm.patchValue({ totalAmount: total });
   }
 
-  submitPurchase(): void {
+  async submitPurchase() {
     if (this.purchaseForm.valid) {
       const purchaseData = this.purchaseForm.value;
       console.log('Purchase Submitted:', purchaseData);
+      await this.purchaseService.add(purchaseData)
       this.purchaseForm.reset();
-      this.purchaseForm.setControl('items', this.fb.array([this.createItemGroup()]));
+      this.router.navigate(['/purchase']);
     }
   }
 }

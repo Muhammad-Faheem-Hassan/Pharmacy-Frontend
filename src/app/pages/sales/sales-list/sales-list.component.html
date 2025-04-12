@@ -1,0 +1,41 @@
+<div class="container mt-4">
+    <div class="d-flex justify-content-between align-items-center mb-3">
+        <h3>Sales List</h3>
+        <a routerLink="/sale/form" class="btn btn-primary">+ Add Sale</a>
+    </div>
+    <div *ngIf="isLoading" class="text-center my-4">
+        <div class="spinner-border text-primary" role="status"></div>
+    </div>
+
+    <table class="table table-bordered" *ngIf="!isLoading && sales.length">
+        <thead class="table-light">
+            <tr>
+                <th>#</th>
+                <th>Customer</th>
+                <th>Date</th>
+                <th>Total Amount (Rs)</th>
+                <th>Items</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr *ngFor="let sale of sales; let i = index">
+                <td>{{ i + 1 }}</td>
+                <td>{{ sale.customer }}</td>
+                <td>{{ sale.date | date }}</td>
+                <td>{{ sale.totalAmount }}</td>
+                <td>
+                    <ul class="mb-0">
+                        <li *ngFor="let item of sale.items">
+                            {{ item.medicine?.name || 'N/A' }} -
+                            {{ item.quantity }} x Rs {{ item.price }}
+                        </li>
+                    </ul>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+
+    <div *ngIf="!isLoading && !sales.length" class="alert alert-info mt-4">
+        No sales recorded yet.
+    </div>
+</div>

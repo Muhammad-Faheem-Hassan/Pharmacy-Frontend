@@ -1,15 +1,23 @@
 import { Routes } from '@angular/router';
 import { DashboardComponent } from './pages/dashboard/dashboard/dashboard.component';
 import { MedicinesComponent } from './pages/medicines/form/medicines.component';
-import { SalesComponent } from './pages/sales/sales/sales.component';
-import { PurchaseComponent } from './pages/purchases/purchases/purchases.component';
+import { PurchaseFormComponent } from './pages/purchases/purchases-form/purchases-form.component';
 import { MedicinesListComponent } from './pages/medicines/list/medicines-list.component';
+import { SupplierListComponent } from './pages/supplier/supplier-list/supplier-list.component';
+import { SupplierFormComponent } from './pages/supplier/supplier-form/supplier-form.component';
+import { PurchaseListComponent } from './pages/purchases/purchases-list/purchases-list.component';
+import { SaleListComponent } from './pages/sales/sales-list/sales-list.component';
+import { SaleFormComponent } from './pages/sales/sales-form/sales-form.component';
 
 export const routes: Routes = [
   { path: '', component: DashboardComponent },
   { path: 'dashboard', component: DashboardComponent },
   { path: 'medicines', component: MedicinesListComponent },
   { path: 'medicines/form', component: MedicinesComponent },
-  { path: 'sales', component: SalesComponent },
-  { path: 'purchase', component: PurchaseComponent }
+  { path: 'sale', component: SaleListComponent },
+  { path: 'sale/form', component: SaleFormComponent },
+  { path: 'purchase', component: PurchaseListComponent },
+  { path: 'purchase/form', component: PurchaseFormComponent },
+  { path: 'supplier', component: SupplierListComponent },
+  { path: 'supplier/form', component: SupplierFormComponent },
 ];

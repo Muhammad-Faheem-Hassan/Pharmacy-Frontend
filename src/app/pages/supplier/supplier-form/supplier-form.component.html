@@ -1,0 +1,20 @@
+<div class="container">
+    <h3 class="mb-3">Add New Supplier</h3>
+    <form [formGroup]="supplierForm" (ngSubmit)="submitForm()">
+        <div class="row g-3">
+            <div class="col-md-6">
+                <label>Name</label>
+                <input type="text" formControlName="name" class="form-control" />
+            </div>
+            <div class="col-md-6">
+                <label>Phone</label>
+                <input type="text" formControlName="phone" class="form-control" />
+            </div>
+            <div class="col-md-6">
+                <label>Address</label>
+                <textarea formControlName="address" class="form-control"></textarea>
+            </div>
+            <button type="submit" class="btn btn-primary" [disabled]="supplierForm.invalid">Save</button>
+        </div>
+    </form>
+</div>
