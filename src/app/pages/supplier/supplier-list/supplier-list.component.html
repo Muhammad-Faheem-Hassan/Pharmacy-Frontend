@@ -4,8 +4,8 @@
         <a class="btn btn-primary" [routerLink]="['/supplier/form']">Add Supplier</a>
     </div>
 
-    <table *ngIf="suppliers.length" class="table table-bordered table-hover">
-        <thead>
+    <table *ngIf="suppliers.length" class="table table-bordered">
+        <thead class="table-light">
             <tr>
                 <th>#</th>
                 <th>Name</th>

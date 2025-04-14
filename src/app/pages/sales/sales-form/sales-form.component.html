@@ -1,75 +1,107 @@
-<div class="container mt-4">
-    <h3 class="mb-3">New Sale</h3>
-  
-    <form [formGroup]="saleForm" (ngSubmit)="submitSale()">
-      <div class="row mb-3">
-        <div class="col-md-6">
-          <label>Customer Name</label>
-          <input formControlName="customer" class="form-control" />
-        </div>
-        <div class="col-md-6">
-          <label>Date</label>
-          <input type="date" formControlName="date" class="form-control" />
-        </div>
+<div class="container">
+  <h3 class="mb-3">New Sale</h3>
+
+  <form [formGroup]="saleForm" (ngSubmit)="submitSale()">
+    <div class="row mb-3">
+      <div class="col-md-6">
+        <label>Customer Name</label>
+        <input formControlName="customer" class="form-control" />
       </div>
-  
-      <div formArrayName="items">
-        <div
-          *ngFor="let item of items.controls; let i = index"
-          [formGroupName]="i"
-          class="row align-items-end mb-2"
-        >
-          <div class="col-md-4">
-            <label>Medicine</label>
+      <div class="col-md-6">
+        <label>Date</label>
+        <input type="date" formControlName="date" class="form-control" />
+      </div>
+    </div>
+
+    <div formArrayName="items">
+      <div *ngFor="let item of items.controls; let i = index" [formGroupName]="i" class="row align-items-start mb-2">
+
+        <!-- Medicine -->
+        <div class="col-md-4">
+          <label>Medicine</label>
+          <div class="position-relative" style="min-height: 10px;">
             <select formControlName="medicine" class="form-control">
               <option value="">-- Select Medicine --</option>
-              <option *ngFor="let med of medicines" [value]="med._id">
+              <option *ngFor="let med of medicines" [value]="med._id"
+                [disabled]="isMedicineSelected(med._id) && item.get('medicine')?.value !== med._id">
                 {{ med.name }}
               </option>
             </select>
-          </div>
-  
-          <div class="col-md-2">
-            <label>Quantity</label>
-            <input type="number" formControlName="quantity" class="form-control" />
-          </div>
-  
-          <div class="col-md-2">
-            <label>Price</label>
-            <input type="number" formControlName="price" class="form-control" />
-          </div>
-  
-          <div class="col-md-2">
-            <label>Total</label>
-            <div class="form-control bg-light">
-              {{
-                item.value.quantity && item.value.price
-                  ? item.value.quantity * item.value.price
-                  : 0
-              }}
-            </div>
-          </div>
-  
-          <div class="col-md-2 text-end">
-            <div class="d-flex flex-row">
-              <button type="button" class="btn btn-danger" (click)="removeItem(i)">
-                Remove
-              </button>
-              <button *ngIf="i === items.controls.length - 1" type="button" class="btn btn-secondary ms-1"
-                (click)="addItem()">
-                <i class="bi bi-plus-lg me-1"></i> Add
-              </button>
+            <div style="font-size: 12px;" class="text-danger mt-1"
+              *ngIf="item.get('medicine')?.touched && item.get('medicine')?.errors?.['required']">
+              Medicine is required.
             </div>
           </div>
         </div>
+
+        <!-- Quantity -->
+        <div class="col-md-2">
+          <label>Quantity</label> <small *ngIf="getStock(i)">
+            (Available: {{ getStock(i) }})
+          </small>
+          <div class="position-relative" style="min-height: 10px;">
+            <input type="number" class="form-control" formControlName="quantity" [readonly]="!getStock(i)"
+              (input)="onQuantityInput(i)" />
+
+            <div style="font-size: 12px;" class="text-danger mt-1"
+              *ngIf="item.get('quantity')?.touched && item.get('quantity')?.invalid">
+              <div *ngIf="item.get('quantity')?.errors?.['required']">
+                Quantity is required.
+              </div>
+              <div *ngIf="item.get('quantity')?.errors?.['min']">
+                Quantity must be at least 1.
+              </div>
+              <div *ngIf="item.get('quantity')?.errors?.['max']">
+                Quantity exceeds available stock.
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Price -->
+        <div class="col-md-2">
+          <label>Price</label>
+          <div class="position-relative" style="min-height: 10px;">
+            <input type="number" formControlName="price" class="form-control" />
+            <div class="text-danger mt-1" style="font-size: 12px;"
+              *ngIf="item.get('price')?.touched && item.get('price')?.errors?.['required']">
+              Price is required.
+            </div>
+          </div>
+        </div>
+
+        <!-- Total -->
+        <div class="col-md-2">
+          <label>Total</label>
+          <div class="form-control bg-light">
+            {{
+            item.value.quantity && item.value.price
+            ? item.value.quantity * item.value.price
+            : 0
+            }}
+          </div>
+        </div>
+
+        <!-- Actions -->
+        <div class="col-md-2 text-end d-flex align-items-end" style="min-height: 60px;">
+          <div class="d-flex flex-row">
+            <button type="button" class="btn btn-danger" (click)="removeItem(i)">
+              Remove
+            </button>
+            <button *ngIf="i === items.controls.length - 1" type="button" class="btn btn-secondary ms-1"
+              (click)="addItem()">
+              <i class="bi bi-plus-lg me-1"></i> Add
+            </button>
+          </div>
+        </div>
       </div>
-  
-      <div class="mt-3">
-        <h5>Total Amount: Rs {{ totalAmount }}</h5>
-        <button class="btn btn-primary mt-2" [disabled]="saleForm.invalid">
-          Save Sale
-        </button>
-      </div>
-    </form>
-  </div>
-  
+    </div>
+
+    <div class="mt-3">
+      <h5>Total Amount: Rs {{ totalAmount }}</h5>
+      <button class="btn btn-primary mt-2" [disabled]="saleForm.invalid">
+        Save Sale
+      </button>
+    </div>
+  </form>
+</div>

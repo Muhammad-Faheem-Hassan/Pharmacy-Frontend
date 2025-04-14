@@ -8,6 +8,7 @@ import { SupplierFormComponent } from './pages/supplier/supplier-form/supplier-f
 import { PurchaseListComponent } from './pages/purchases/purchases-list/purchases-list.component';
 import { SaleListComponent } from './pages/sales/sales-list/sales-list.component';
 import { SaleFormComponent } from './pages/sales/sales-form/sales-form.component';
+import { SalesDetailsComponent } from './pages/sales/sales-details/sales-details.component';
 
 export const routes: Routes = [
   { path: '', component: DashboardComponent },
@@ -16,6 +17,8 @@ export const routes: Routes = [
   { path: 'medicines/form', component: MedicinesComponent },
   { path: 'sale', component: SaleListComponent },
   { path: 'sale/form', component: SaleFormComponent },
+  { path: 'sale/form/:mode', component: SaleFormComponent },
+  { path: 'sale/details/:id', component: SalesDetailsComponent },
   { path: 'purchase', component: PurchaseListComponent },
   { path: 'purchase/form', component: PurchaseFormComponent },
   { path: 'supplier', component: SupplierListComponent },
