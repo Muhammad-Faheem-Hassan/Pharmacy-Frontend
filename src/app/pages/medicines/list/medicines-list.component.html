@@ -5,13 +5,18 @@
       <i class="bi bi-plus-circle me-1"></i> Add Medicine
     </a>
   </div>
+  <div class="row g-2 mb-3">
+    <div class="col-md-3">
+      <input type="text" class="form-control" [(ngModel)]="s"  (input)="onFilterChange()" placeholder="Search............."/>
+    </div>
+  </div>
 
   <div *ngIf="isLoading" class="text-center my-4">
     <div class="spinner-border text-primary" role="status"></div>
     <p class="mt-2">Loading medicines...</p>
   </div>
 
-  <table *ngIf="!isLoading && medicines.length" class="table table-bordered table-hover">
+  <table *ngIf="!isLoading && medicines.length" class="table table-sm">
     <thead class="table-light">
       <tr>
         <th>#</th>
@@ -33,6 +38,9 @@
       </tr>
     </tbody>
   </table>
+
+  <app-pagination [totalItems]="totalRecord" [pageSize]="pageSize" [currentPage]="currentPage"
+    (pageChange)="onPageChange($event)"></app-pagination>
 
   <div *ngIf="!isLoading && !medicines.length" class="alert alert-info">
     No medicines available.

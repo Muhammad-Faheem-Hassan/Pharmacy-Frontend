@@ -24,6 +24,8 @@ export class PurchaseFormComponent {
     private medicineService: MedicineService,
     private router: Router,
     private route: ActivatedRoute) {
+    this.fetchMedicines();
+    this.fetchSuppliers();
     this.purchaseForm = this.fb.group({
       supplierId: ['', Validators.required],
       date: [new Date().toISOString().substring(0, 10), Validators.required],
@@ -31,9 +33,8 @@ export class PurchaseFormComponent {
     });
     this.mode = this.route.snapshot.paramMap.get('mode');
 
-    this.addItem(); // Add at least one row
-    this.fetchMedicines();
-    this.fetchSuppliers();
+    this.addItem();
+
   }
 
   get items(): FormArray {
@@ -76,7 +77,7 @@ export class PurchaseFormComponent {
 
   fetchMedicines(): void {
     this.medicineService.getItems().then(data => {
-      this.medicines = data;
+      this.medicines = data.data;
     });
   }
 
@@ -91,15 +92,6 @@ export class PurchaseFormComponent {
       this.suppliers = await this.supplierService.getItems();
     } catch (error) {
       console.error('Error fetching suppliers:', error);
-    } finally {
-
-    }
-  }
-  async fetchMedicine(): Promise<void> {
-    try {
-      this.medicines = await this.medicineService.getItems();
-    } catch (error) {
-      console.error('Error fetching medicines:', error);
     } finally {
 
     }
