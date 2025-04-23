@@ -1,12 +1,12 @@
 <div class="container mt-4">
     <div class="card shadow-sm">
       <div class="card-header bg-primary text-white">
-        <h4 class="mb-0">Sale Details</h4>
+        <h4 class="mb-0">Purchase Details</h4>
       </div>
       <div class="card-body">
         <div class="row mb-3">
           <div class="col-md-6">
-            <p><strong>Customer:</strong> {{ sale?.customer }}</p>
+            <p><strong>Customer:</strong> {{ sale?.supplierId.name }}</p>
           </div>
           <div class="col-md-6">
             <p><strong>Date:</strong> {{ sale?.date | date:'mediumDate' }}</p>

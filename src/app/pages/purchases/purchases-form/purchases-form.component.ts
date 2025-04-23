@@ -5,7 +5,7 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { SupplierService } from '../../../core/services/supplier.service';
 import { PurchaseService } from '../../../core/services/puchase.service';
 import { MedicineService } from '../../../core/services/medicine.service';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 
 @Component({
   selector: 'app-purchase-form',
@@ -17,11 +17,13 @@ export class PurchaseFormComponent implements OnInit {
   purchaseForm!: FormGroup;
   suppliers: any[] = [];
   medicines: any[] = [];
+  mode: string | null = null;
 
   constructor(private fb: FormBuilder, private supplierService: SupplierService,
     private purchaseService: PurchaseService,
     private medicineService: MedicineService,
-    private router: Router) { }
+    private router: Router,
+    private route: ActivatedRoute) { }
 
 
   ngOnInit(): void {
@@ -31,6 +33,7 @@ export class PurchaseFormComponent implements OnInit {
       items: this.fb.array([this.createItemGroup()]),
       totalAmount: [0],
     });
+    this.mode = this.route.snapshot.paramMap.get('mode');
     this.fetchSuppliers();
     this.fetchMedicine();
   }
@@ -63,6 +66,7 @@ export class PurchaseFormComponent implements OnInit {
       medicine: ['', Validators.required],
       quantity: [1, [Validators.required, Validators.min(1)]],
       price: [0, [Validators.required, Validators.min(0)]],
+      salePrice: [0, [Validators.required, Validators.min(0)]],
     });
   }
 
@@ -90,10 +94,28 @@ export class PurchaseFormComponent implements OnInit {
   async submitPurchase() {
     if (this.purchaseForm.valid) {
       const purchaseData = this.purchaseForm.value;
+      const payload = {
+        ...this.purchaseForm.value,
+      };
+      if (this.mode === 'return') {
+        payload.type = 'RETURN';
+      } else {
+        payload.type = 'PURCHASE';
+      }
       console.log('Purchase Submitted:', purchaseData);
-      await this.purchaseService.add(purchaseData)
+      await this.purchaseService.add(payload)
       this.purchaseForm.reset();
       this.router.navigate(['/purchase']);
     }
+  }
+
+  isMedicineSelected(medId: string): boolean {
+    return this.items.controls.some(ctrl => ctrl.get('medicine')?.value === medId);
+  }
+
+  getStock(index: number): number {
+    const medicineId = this.items.at(index).get('medicine')?.value;
+    const med = this.medicines.find(m => m._id === medicineId);
+    return med ? med.quantity : 0;
   }
 }
