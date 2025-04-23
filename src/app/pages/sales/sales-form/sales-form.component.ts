@@ -60,13 +60,13 @@ export class SaleFormComponent {
   addItem(): void {
     const group = this.fb.group({
       medicine: ['', Validators.required],
-      quantity: [1, [Validators.required, Validators.min(1)]],
+      quantity: [0, [Validators.required, Validators.min(0)]],
       price: [0, [Validators.required, Validators.min(0)]],
     });
 
     group.get('medicine')?.valueChanges.subscribe(medId => {
       const med = this.medicines.find(m => m._id === medId);
-      if (med && this.mode === "RETURN") {
+      if (med && this.mode != "return") {
         group.get('quantity')?.setValidators([
           Validators.required,
           Validators.min(1),

@@ -6,10 +6,24 @@
       <a routerLink="/sale/form/return" class="btn btn-primary ms-1">Add Return</a>
     </div>
   </div>
+  <div class="row g-2 mb-3">
+    <div class="col-md-3">
+      <input type="date" class="form-control" [(ngModel)]="startDate" (change)="onFilterChange()" />
+    </div>
+    <div class="col-md-3">
+      <input type="date" class="form-control" [(ngModel)]="endDate" (change)="onFilterChange()" />
+    </div>
+    <div class="col-md-3">
+      <select class="form-select" [(ngModel)]="type" (change)="onFilterChange()">
+        <option value="">All Types</option>
+        <option value="SALE">Sale</option>
+        <option value="RETURN">Return</option>
+      </select>
+    </div>
+  </div>
   <div *ngIf="isLoading" class="text-center my-4">
     <div class="spinner-border text-primary" role="status"></div>
   </div>
-
 
   <table class="table table-bordered" *ngIf="!isLoading && sales.length">
     <thead class="table-light">
@@ -37,6 +51,12 @@
       </tr>
     </tbody>
   </table>
+  <app-pagination
+      [totalItems]="totalRecord"
+      [pageSize]="pageSize"
+      [currentPage]="currentPage"
+      (pageChange)="onPageChange($event)"
+    ></app-pagination>
 
   <div *ngIf="!isLoading && !sales.length" class="alert alert-info mt-4">
     No sales recorded yet.

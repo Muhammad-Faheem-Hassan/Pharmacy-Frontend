@@ -22,14 +22,42 @@ export class SaleListComponent implements OnInit {
   sales: any[] = [];
   isLoading = true;
 
-  currentPage: number = 1;
-  pageSize: number = 5; 
+  totalRecord = 0;
+  currentPage = 1;
+  pageSize = 10;
+
+  startDate: string = '';
+  endDate: string = '';
+  type: string = '';
 
   constructor(private saleService: SaleService) { }
 
-  async ngOnInit(): Promise<void> {
+  ngOnInit(): void {
+    this.fetchSales();
+  }
+
+  async fetchSales(): Promise<void> {
+    this.isLoading = true;
+    const query: any = {
+      l: this.pageSize,
+      o: (this.currentPage - 1) * this.pageSize,
+    };
+    if (this.startDate) {
+      query.startDate = this.startDate;
+    }
+
+    if (this.endDate) {
+      query.endDate = this.endDate;
+    }
+
+    if (this.type) {
+      query.type = this.type;
+    }
+
     try {
-      this.sales = await this.saleService.fetch();
+      const res = await this.saleService.fetch(query);
+      this.sales = res.data;
+      this.totalRecord = res.totalRecord;
     } catch (error) {
       console.error('Error fetching sales:', error);
     } finally {
@@ -39,11 +67,11 @@ export class SaleListComponent implements OnInit {
 
   onPageChange(page: number) {
     this.currentPage = page;
-    this.updatePagedSales();
+    this.fetchSales();
   }
 
-  updatePagedSales() {
-    const start = (this.currentPage - 1) * this.pageSize;
-    const end = start + this.pageSize;
+  onFilterChange() {
+    this.currentPage = 1;
+    this.fetchSales();
   }
 }

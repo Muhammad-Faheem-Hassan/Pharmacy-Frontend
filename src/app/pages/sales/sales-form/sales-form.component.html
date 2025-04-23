@@ -9,7 +9,7 @@
       </div>
       <div class="col-md-6">
         <label>Date</label>
-        <input type="date" formControlName="date" class="form-control" />
+        <input type="date" formControlName="date" class="form-control" readonly/>
       </div>
     </div>
 
@@ -40,8 +40,7 @@
             (Available: {{ getStock(i) }})
           </small>
           <div class="position-relative" style="min-height: 10px;">
-            <input type="number" class="form-control" formControlName="quantity" [readonly]="!getStock(i)"
-              (input)="onQuantityInput(i)" />
+            <input type="number" class="form-control" formControlName="quantity" (input)="onQuantityInput(i)" />
 
             <div style="font-size: 12px;" class="text-danger mt-1"
               *ngIf="item.get('quantity')?.touched && item.get('quantity')?.invalid">
@@ -52,7 +51,9 @@
                 Quantity must be at least 1.
               </div>
               <div *ngIf="item.get('quantity')?.errors?.['max']">
-                Quantity exceeds available stock.
+                Quantity exceeds available stock (Max: {{
+                getStock(item.get('medicine')?.value)
+                }}).
               </div>
             </div>
           </div>

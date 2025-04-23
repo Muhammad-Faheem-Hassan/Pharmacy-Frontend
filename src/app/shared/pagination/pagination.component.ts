@@ -1,40 +1,70 @@
 import { CommonModule } from '@angular/common';
-import { Component, EventEmitter, Output } from '@angular/core';
+import { Component, EventEmitter, Input, OnChanges, Output, SimpleChanges } from '@angular/core';
 
 @Component({
   selector: 'app-pagination',
-  imports:[CommonModule],
   standalone: true,
+  imports: [CommonModule],
   templateUrl: './pagination.component.html',
-  styleUrls: ['./pagination.component.scss']
+  styleUrls: ['./pagination.component.scss'],
 })
-export class PaginationComponent {
+export class PaginationComponent implements OnChanges {
+  @Input() totalItems: number = 0;
+  @Input() pageSize: number = 10;
+  @Input() currentPage: number = 1;
+
   @Output() pageChange: EventEmitter<number> = new EventEmitter<number>();
 
-  totalItems: number = 100;  // Example, replace with your actual total items count
-  pageSize: number = 10;     // Items per page
-  currentPage: number = 1;
-  totalPages: number = Math.ceil(this.totalItems / this.pageSize);
+  totalPages: number = 0;
+  pages: (number | string)[] = [];
 
-  pages: number[] = [];
-
-  constructor() {
-    this.generatePages();
-  }
-
-  // Generate the page numbers
-  generatePages(): void {
-    this.pages = [];
-    for (let i = 1; i <= this.totalPages; i++) {
-      this.pages.push(i);
+  ngOnChanges(changes: SimpleChanges): void {
+    if (changes['totalItems'] || changes['pageSize'] || changes['currentPage']) {
+      this.totalPages = Math.ceil(this.totalItems / this.pageSize);
+      this.generatePages();
     }
   }
 
-  // When a page is clicked
-  onPageChange(page: number): void {
-    if (page < 1 || page > this.totalPages || page === this.currentPage) return;
+  generatePages(): void {
+    const pages: (number | string)[] = [];
+    const maxVisible = 5;
 
-    this.currentPage = page;
-    this.pageChange.emit(page);  // Emit the page change
+    if (this.totalPages <= maxVisible) {
+      for (let i = 1; i <= this.totalPages; i++) {
+        pages.push(i);
+      }
+    } else {
+      const start = Math.max(1, this.currentPage - 2);
+      const end = Math.min(this.totalPages, this.currentPage + 2);
+
+      if (start > 1) pages.push(1, '...');
+      for (let i = start; i <= end; i++) {
+        pages.push(i);
+      }
+      if (end < this.totalPages) pages.push('...', this.totalPages);
+    }
+
+    this.pages = pages;
+  }
+
+  goToPage(page: number | string): void {
+    if (typeof page === 'number' && page !== this.currentPage) {
+      this.currentPage = page;
+      this.pageChange.emit(this.currentPage);
+    }
+  }
+
+  prev(): void {
+    if (this.currentPage > 1) {
+      this.currentPage--;
+      this.pageChange.emit(this.currentPage);
+    }
+  }
+
+  next(): void {
+    if (this.currentPage < this.totalPages) {
+      this.currentPage++;
+      this.pageChange.emit(this.currentPage);
+    }
   }
 }
