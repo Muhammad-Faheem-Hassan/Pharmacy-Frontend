@@ -6,6 +6,22 @@
         </a>
     </div>
 
+    <div class="row g-2 mb-3">
+        <div class="col-md-3">
+          <input type="date" class="form-control" [(ngModel)]="startDate" (change)="onFilterChange()" />
+        </div>
+        <div class="col-md-3">
+          <input type="date" class="form-control" [(ngModel)]="endDate" (change)="onFilterChange()" />
+        </div>
+        <div class="col-md-3">
+          <select class="form-select" [(ngModel)]="type" (change)="onFilterChange()">
+            <option value="">All Types</option>
+            <option value="SALE">Sale</option>
+            <option value="RETURN">Return</option>
+          </select>
+        </div>
+      </div>
+
     <div *ngIf="isLoading" class="text-center my-4">
         <div class="spinner-border text-primary" role="status"></div>
         <p class="mt-2">Loading purchases...</p>
@@ -40,6 +56,12 @@
         </tbody>
     </table>
 
+    <app-pagination
+      [totalItems]="totalRecord"
+      [pageSize]="pageSize"
+      [currentPage]="currentPage"
+      (pageChange)="onPageChange($event)"
+    ></app-pagination>
     <div *ngIf="!isLoading && !purchases.length" class="alert alert-info">
         No purchases found.
     </div>
